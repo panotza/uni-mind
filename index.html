@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTC</title>
+    <style>
+        body {
+            background-color: black;
+        }
+        </style>
+</head>
+
+<body>
+    <video id="localVideo" autoplay playsinline controls="false" width="400" height="300"></video>
+    <video id="remoteVideo" autoplay playsinline controls="false" width="400" height="300"></video>
+    <input type="text" id="inputOffer">
+    <input type="button" id="shareScreen" value="Share Screen">
+    <input type="button" id="makeCall" value="Make a call">
+    <input type="button" id="receiveCall" value="Receive a call">
+</body>
+
+<script src="script.js"></script>
+</html>

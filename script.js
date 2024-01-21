@@ -81,6 +81,16 @@ async function makeCall() {
             }
         });
     })
+
+    const offer = await conn.createOffer();
+    await conn.setLocalDescription(offer);
+
+    const msg = await encryptMessage(key, iv, JSON.stringify(offer))
+    await Promise.all[saveCandidate, save(sess, 'offer', msg)]
+    console.log('make a call succes')
+
+    document.getElementById('inputOffer').value = `${window.location.href}?sess=${encodeURIComponent(sess)}&secret=${encodeURIComponent(secret)}&iv=${encodeURIComponent(bytesToBase64(iv))}&salt=${encodeURIComponent(bytesToBase64(salt))}`
+
     intervalLoad(sess, 'answer', async (encryptedCandidate) => {
         const decryptedAnswer = await decryptMessage(key, iv, encryptedCandidate)
         const answer = JSON.parse(decryptedAnswer);
@@ -94,15 +104,6 @@ async function makeCall() {
             })
         })
     })
-
-    const offer = await conn.createOffer();
-    await conn.setLocalDescription(offer);
-
-    const msg = await encryptMessage(key, iv, JSON.stringify(offer))
-    await Promise.all[saveCandidate, save(sess, 'offer', msg)]
-    console.log('make a call succes')
-
-    document.getElementById('inputOffer').value = `${window.location.href}?sess=${encodeURIComponent(sess)}&secret=${encodeURIComponent(secret)}&iv=${encodeURIComponent(bytesToBase64(iv))}&salt=${encodeURIComponent(bytesToBase64(salt))}`
 }
 
 document.getElementById('makeCall').addEventListener('click', () => {
@@ -154,13 +155,6 @@ async function receiveCall(sess, secret, iv, salt) {
             }
         });
     })
-    intervalLoad(sess, 'offer-candidate', async (encryptedCandidate) => {
-        const decryptedCandidate = await decryptMessage(key, iv, encryptedCandidate)
-        const candidates = JSON.parse(decryptedCandidate);
-        candidates.forEach((c) => {
-            conn.addIceCandidate(c);
-        })
-    })
 
     {
         const remoteVideo = document.querySelector('video#remoteVideo');
@@ -177,6 +171,14 @@ async function receiveCall(sess, secret, iv, salt) {
     await conn.setRemoteDescription(new RTCSessionDescription(offer));
     const answer = await conn.createAnswer();
     await conn.setLocalDescription(answer);
+
+    intervalLoad(sess, 'offer-candidate', async (encryptedCandidate) => {
+        const decryptedCandidate = await decryptMessage(key, iv, encryptedCandidate)
+        const candidates = JSON.parse(decryptedCandidate);
+        candidates.forEach((c) => {
+            conn.addIceCandidate(c);
+        })
+    })
 
     const msg = await encryptMessage(key, iv, JSON.stringify(answer))
     await Promise.all[saveCandidate, save(sess, 'answer', msg)]

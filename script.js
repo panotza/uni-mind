@@ -102,7 +102,7 @@ async function makeCall() {
     await Promise.all[saveCandidate, save(sess, 'offer', msg)]
     console.log('make a call succes')
 
-    document.getElementById('inputOffer').value = `${window.location.origin}?sess=${encodeURIComponent(sess)}&secret=${encodeURIComponent(secret)}&iv=${encodeURIComponent(bytesToBase64(iv))}&salt=${encodeURIComponent(bytesToBase64(salt))}`
+    document.getElementById('inputOffer').value = `${window.location.href}?sess=${encodeURIComponent(sess)}&secret=${encodeURIComponent(secret)}&iv=${encodeURIComponent(bytesToBase64(iv))}&salt=${encodeURIComponent(bytesToBase64(salt))}`
 }
 
 document.getElementById('makeCall').addEventListener('click', () => {
